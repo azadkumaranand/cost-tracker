@@ -96,7 +96,7 @@ function Home() {
           const dateB = new Date(b.date);
 
           // Compare the dates
-          return dateA - dateB;
+          return dateB - dateA;
         })
       : [];
 
@@ -136,12 +136,14 @@ function Home() {
   const [overlay, setOverlay] = React.useState(<OverlayTwo />)
 
   const [notEditable, setNotEditable] = useState(true);
+  const [editableId, setEditableId] = useState("");
 
   //edit task
-  const editTask = (name, amount) => {
+  const editTask = (name, amount, id) => {
     setUpodateName(name);
     setUpodateAmount(amount)
     setNotEditable(false);
+    setEditableId(id);
   }
 
   //update task
@@ -298,9 +300,9 @@ function Home() {
                         <input
                           type="text"
                           className="form-control"
-                          value={notEditable ? item.name : updateName}
+                          value={editableId === item.id && !notEditable ? updateName : item.name}
                           onChange={(e)=>{setUpodateName(e.target.value)}}
-                          disabled = {notEditable}
+                          disabled = {editableId !== item.id && !notEditable}
                         />
                       </div>
                     </div>
@@ -322,7 +324,7 @@ function Home() {
                       </div>
                     </div>
                     <div>
-                      <button className="btn btn-warning mx-3" onClick={()=>{notEditable? editTask(item.name, item.amount) : updateTask(item.id)}}>{notEditable?"Edit":"Update"}</button>
+                      <button className="btn btn-warning mx-3" onClick={()=>{notEditable? editTask(item.name, item.amount, item.id) : updateTask(item.id)}}>{(editableId === item.id && !notEditable)?"Update":"Edit"}</button>
                       <button className="btn btn-danger" onClick={()=>{deleteTask(item.id)}}>Delete</button>
                     </div>
                   </div>
